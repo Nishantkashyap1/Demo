@@ -1,0 +1,19 @@
+# Example workflow with `package.json` in the root directory
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      # Install Node.js and npm
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Use the Node.js version compatible with your project
+
+      # Install npm dependencies
+      - name: Install npm Dependencies
+        run: npm install
