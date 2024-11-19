@@ -1,0 +1,38 @@
+# File: .github/workflows/drupal-setup.yml
+
+name: Drupal 10 CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo, xml, ctype, json, curl, dom, gd, simplexml, tokenizer
+          tools: composer
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # Run `composer install` assuming `composer.json` is in the root
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
