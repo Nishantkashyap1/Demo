@@ -1,0 +1,35 @@
+# File: .github/workflows/commit-check.yml
+
+name: Commit Message Check
+
+# Trigger the workflow on push and pull request events
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  commit-message-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the latest commit
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Check commit message
+      - name: Validate commit message
+        run: |
+          # Extract the commit message of the latest commit
+          COMMIT_MSG=$(git log -1 --pretty=format:'%s')
+          echo "Commit message: $COMMIT_MSG"
+
+          # Define your regex pattern here
+          # For example: to enforce a commit message starting with a capital letter
+          if [[ ! "$COMMIT_MSG" =~ ^[A-Z] ]]; then
+            echo "❌ Commit message must start with a capital letter!"
+            exit 1
+          fi
