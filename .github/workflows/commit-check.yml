@@ -33,3 +33,4 @@ jobs:
             echo "❌ Commit message must start with a capital letter!"
             exit 1
           fi
+          echo "✅ Commit message is valid!"
