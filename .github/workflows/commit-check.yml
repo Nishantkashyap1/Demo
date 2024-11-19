@@ -16,21 +16,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the latest commit
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Check commit message
       - name: Validate commit message
         run: |
           # Extract the commit message of the latest commit
           COMMIT_MSG=$(git log -1 --pretty=format:'%s')
           echo "Commit message: $COMMIT_MSG"
 
-          # Define your regex pattern here
-          # For example: to enforce a commit message starting with a capital letter
-          if [[ ! "$COMMIT_MSG" =~ ^[A-Z] ]]; then
-            echo "❌ Commit message must start with a capital letter!"
+          # Condition 1: Message should start with a ticket number in the format "NIS-12345:"
+          if [[ ! "$COMMIT_MSG" =~ ^NIS-[0-9]{5}: ]]; then
+            echo "❌ Commit message must start with a ticket number in the format 'NIS-12345:'."
             exit 1
           fi
+
+          # Condition 2: Description should be at least 10 characters long after the ticket number
+          MSG_CONTENT=$(echo "$COMMIT_MSG" | sed 's/^NIS-[0-9]\{5\}://g')
+          if (( ${#MSG_CONTENT} < 10 )); then
+            echo "❌ Commit message description should be at least 10 characters long."
+            exit 1
+          fi
+
+          # Condition 4: Commit message should not exceed 72 characters
+          if (( ${#COMMIT_MSG} > 72 )); then
+            echo "❌ Commit message should not be more than 72 characters."
+            exit 1
+          fi
+
+          # Condition 5: Forbidden words check (e.g., WIP should not be used)
+          if [[ "$COMMIT_MSG" =~ (WIP|wip) ]]; then
+            echo "❌ Commit message should not contain 'WIP' (Work In Progress)."
+            exit 1
+          fi
+
           echo "✅ Commit message is valid!"
