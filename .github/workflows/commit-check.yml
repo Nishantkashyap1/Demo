@@ -38,16 +38,16 @@ jobs:
             exit 1
           fi
 
-          # Condition 4: Commit message should not exceed 72 characters
+          # Condition 3: Commit message should not exceed 72 characters
           if (( ${#COMMIT_MSG} > 72 )); then
             echo "❌ Commit message should not be more than 72 characters."
             exit 1
           fi
 
-          # Condition 5: Forbidden words check (e.g., WIP should not be used)
+          # Condition 4: Forbidden words check (e.g., WIP should not be used)
           if [[ "$COMMIT_MSG" =~ (WIP|wip) ]]; then
             echo "❌ Commit message should not contain 'WIP' (Work In Progress)."
             exit 1
           fi
 
-          echo "✅ Commit message is valid!"
+          echo "✅ Love you dear Darling wifey."
